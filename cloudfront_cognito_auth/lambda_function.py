@@ -1,6 +1,6 @@
 """ This lambda function checks """
-
-from typing import Dict, Union
+import hashlib
+from typing import Callable, Dict, Union
 
 import requests
 from jose import jwt
@@ -169,6 +169,21 @@ def check_token_access(access_token: Dict) -> bool:
     return True
 
 
+def check_authorized_route(cloud_front_request: Dict, token: Dict) -> bool:
+    """Checks if 'sub' is path of requested route"""
+    return token["sub"] in cloud_front_request["request"]["uri"]
+
+
+def check_authorized_group(
+    cloud_front_request: Dict, token: Dict, path_modifier: Callable = hashlib.md5
+) -> bool:
+    """Checks if 'cognito:group' is path of requested route"""
+    token_group = token["cognito:group"]
+    if path_modifier:
+        token_group = path_modifier(token_group)
+    return token_group in cloud_front_request["request"]["uri"]
+
+
 def modify_request(cloud_front_request: Dict) -> Dict:
     """Remove header from viewer request for cloudfronts origin request"""
     del cloud_front_request["headers"]["authorization"]
@@ -194,9 +209,12 @@ def lambda_handler(event, context):
         print("An error occured (token verfication failed):")
         print(e)
         return DEFAULT_RESPONE
-    token_check = check_token_access(decoded_token)
-    if token_check is False:
+    if not check_token_access(decoded_token):
         print("An error occured (unauthorized token content):")
+        return DEFAULT_RESPONE
+    # Just an example of using the requested path
+    if not check_authorized_route(cf_request, decoded_token):
+        print("Unauthorized sub in access_token:")
         return DEFAULT_RESPONE
     response = modify_request(cf_request)
     print(response)
