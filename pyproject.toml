@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "cloudfront-cognito-auth"
+version = "0.1.0"
+description = "Lambda@edge to secure cloudfront distributions using cognito as IDP in python"
+authors = ["arrrrrmin <info@dotarmin.info>"]
+readme = "README.md"
+packages = [{include = "cloudfront_cognito_auth"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+python-jose = "^3.3.0"
+requests = "^2.27.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
