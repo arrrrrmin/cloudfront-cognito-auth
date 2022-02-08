@@ -1,0 +1,28 @@
+{
+    "Records": [
+        {
+            "cf": {
+                "request": {
+                    "headers": {
+                        "host": [
+                            {
+                                "value": "d123.cf.net",
+                                "key": "Host"
+                            }
+                        ],
+                        "authorization": [
+                            {
+                                "value": "Bearer <token>",
+                                "key": "Authorization"
+                            }
+                        ]
+                    },
+                    "clientIp": "2001:cdba::3257:9652",
+                    "uri": "path/to/resource.jpg",
+                    "method": "GET"
+                },
+                "config": {"distributionId": "<dist-id>"}
+            }
+        }
+    ]
+}
